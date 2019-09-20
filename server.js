@@ -72,9 +72,35 @@ app.delete('/api', function (request, response) {
 })
 // 返回详情
 app.get('/api/:id', function (request, response) {
-  db.all(`select * from user where msgid = '${request.params.id}'`, function (err, res) {
+  db.get(`select * from user where msgid = '${request.params.id}'`, function (err, res) {
+    if (err) return;
+    res = res || 'query no data';
+    response.send(JSON.stringify(res));
+
+
+  });
+})
+
+// 删除item
+app.delete('/api/:id', function (request, response) {
+  db.run(`delete from user where msgid = '${request.params.id}'`, function (err, res) {
     if (!err)
-      response.send(JSON.stringify(res));
+      response.send('DELETE ITEM SUCCESSFUL');
+    else {
+
+    }
+
+  });
+})
+
+// update item
+app.put('/api/:id', function (request, response) {
+  const { status, message } = request.body
+  console.log(status, message, request.params.id)
+  db.run(`update user set status = '${status}', message = '${message}' where msgid = '${request.params.id}'`, function (err, res) {
+    console.log(err)
+    if (!err)
+      response.send('UPDATE ITEM SUCCESSFUL');
     else {
 
     }

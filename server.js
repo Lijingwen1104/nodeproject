@@ -46,10 +46,17 @@ app.get('/api', function (request, response) {
 app.put('/api', function (request, response) {
   const { users } = request.body
   db.run('delete from user')
+  var stmt = db.prepare("INSERT INTO user(status, message) VALUES (?, ?)");
   users.forEach(element => {
-    db.run(`INSERT INTO user (status, message) VALUES ('${element.status}', '${element.message}')`);
+    // db.run(`INSERT INTO user (status, message) VALUES ('${element.status}', '${element.message}')`);
+    stmt.run(element.status, element.message);
   });
-  response.send('success')
+  stmt.finalize(function (err) {
+    if (err) {
+      response.send('put items error');
+    }
+    response.send('success')
+  });
 })
 // 新增集合
 app.post('/api', function (request, response) {
@@ -71,7 +78,7 @@ app.get('/api/:id', function (request, response) {
     else {
 
     }
-      
+
   });
 })
 // 更新id

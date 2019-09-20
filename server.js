@@ -8,12 +8,12 @@ const fileName = 'api.db';
 
 var app = express();
 
-app.use(express.json()) 
+app.use(express.json())
 // var bodyParser = require('body-parser');
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 // 允许所有的请求形式
-app.use(function(request, res, next) {
+app.use(function (request, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -21,37 +21,47 @@ app.use(function(request, res, next) {
 
 var exists = fs.existsSync(fileName);
 if (exists) {
-    fs.unlinkSync(fileName)
+  fs.unlinkSync(fileName)
 }
 
 var db = new sqlite3.Database(fileName, function () {
 });
 
+db.run("CREATE TABLE user (msgid INTEGER UNIQUE primary key autoincrement,status TEXT, message TEXT, timestamp TIMESTAMP default current_timestamp)", (err) => {
+  if (err) throw err;
+  console.log("数据表创建成功")
+});
+
 // 获取所有
 app.get('/api', function (request, response) {
   db.all("select * from user", function (err, res) {
-    if (!err)
-      response.send(JSON.stringify(res));
-    else {
+    if (err) return;
 
-    }
-      
+    res = res || []
+    response.send(JSON.stringify(res));
   });
 
 })
 // 替换集合
-app.put('/api', function(request,response){
-  const {users} = request.body
+app.put('/api', function (request, response) {
+  const { users } = request.body
   db.run('delete from user')
+  var stmt = db.prepare("INSERT INTO user(status, message) VALUES (?, ?)");
   users.forEach(element => {
-    db.run(`INSERT INTO user (status, message) VALUES ('${element.status}', '${element.message}')`);
+    // db.run(`INSERT INTO user (status, message) VALUES ('${element.status}', '${element.message}')`);
+    stmt.run(element.status, element.message);
   });
-  response.send('success')
+  stmt.finalize(function (err) {
+    if (err) {
+      response.send('put items error');
+    }
+    response.send('success')
+  });
 })
 // 新增集合
 app.post('/api', function (request, response) {
   // INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (1, 'Paul', 32, 'California', 20000.00 
-  const {status, message} = request.body
+  const { status, message } = request.body
   db.run(`INSERT INTO user (status, message) VALUES ('${status}', '${message}')`);
   response.send('success')
 })
@@ -68,7 +78,7 @@ app.get('/api/:id', function (request, response) {
     else {
 
     }
-      
+
   });
 })
 // 更新id
@@ -77,6 +87,5 @@ var server = app.listen(3000, function () {
   var host = server.address().address
   var port = server.address().port
 
-  
-
+  console.log(`app is listening on http://localhost:${port}`)
 })

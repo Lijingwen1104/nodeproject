@@ -1,8 +1,13 @@
 //express_demo.js 文件
 var querystring = require("querystring")
 var express = require('express');
-var app = express();
+var fs = require('fs');
 var sqlite3 = require('sqlite3');
+
+const fileName = 'api.db';
+
+var app = express();
+
 app.use(express.json()) 
 // var bodyParser = require('body-parser');
 // app.use(bodyParser.json());
@@ -14,8 +19,14 @@ app.use(function(request, res, next) {
   next();
 });
 
-var db = new sqlite3.Database('api.db', function () {
+var exists = fs.existsSync(fileName);
+if (exists) {
+    fs.unlinkSync(fileName)
+}
+
+var db = new sqlite3.Database(fileName, function () {
 });
+
 // 获取所有
 app.get('/api', function (request, response) {
   db.all("select * from user", function (err, res) {

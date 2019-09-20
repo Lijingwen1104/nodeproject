@@ -36,7 +36,7 @@ const sendRequest = async (options) => {
     //     status: 'status12',
     //     message: 'message12'
     //   }
-    // })·
+    // })
     // const replaseAll = await sendRequest({
     //   hostname: 'localhost',
     //   port: 3000,
@@ -55,6 +55,13 @@ const sendRequest = async (options) => {
     //   method: 'DELETE',
     //   path: '/api',
     // })
+    // const getDetail = await sendRequest({
+    //   hostname: 'localhost',
+    //   port: 3000,
+    //   method: 'get',
+    //   path: '/api/11',
+    // })
+    console.log('getDetail: ', getDetail)
   } catch (error) {
     
   }

@@ -60,6 +60,18 @@ app.delete('/api', function (request, response) {
   db.run('delete from user')
   response.send("DELETE COLLECTION SUCCESSFUL")
 })
+// 返回详情
+app.get('/api/:id', function (request, response) {
+  db.all(`select * from user where msgid = '${request.params.id}'`, function (err, res) {
+    if (!err)
+      response.send(JSON.stringify(res));
+    else {
+
+    }
+      
+  });
+})
+// 更新id
 var server = app.listen(3000, function () {
 
   var host = server.address().address

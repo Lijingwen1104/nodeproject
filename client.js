@@ -3,6 +3,7 @@ const {expect} = require('chai');
 const Constant = require('./Constant');
 const fetchApi = require('./fetch');
 
+// 测试用例
 describe('Test #1', () => {
     it('1. Execute three POST requests to insert three items into the collection.', async () => {
         for (let i = 0; i < 3; i++) {
@@ -155,4 +156,8 @@ describe('Test #3', () => {
         console.log(data);
         expect(data.length).to.equal(4);
     });
+});
+
+after(function(){
+    console.log(Constant.ALL_TESTS_SUCCESSFUL)
 });

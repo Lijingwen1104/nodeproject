@@ -1,3 +1,36 @@
+### 依赖环境
+nodejs 10+
+
+官网 https://nodejs.org
+```bash
+node -v
+v10.15.3
+```
+
+### 安装依赖
+```bash
+npm install
+```
+```bash
+yarn
+```
+
+### 开始运行
+
+##### 启动服务
+```bash
+npm start
+```
+
+##### 接口测试
+```bash
+npm test
+```
+###### 每次测试需要重新执行以上两条命令
+
+
+### 具体需求
+
 1. express 实现API
 2. localhost://3000
 3. user 表
